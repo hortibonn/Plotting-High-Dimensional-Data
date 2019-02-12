@@ -13,7 +13,7 @@ library(dplyr)
 library(tidyverse) #tidyverse includes a number of useful packages
 ```
 
-A number of useful plotting functions created using `ggplot2` and `tidyverse`.
+A number of useful plotting functions created using functions from `ggplot2`, `plyr`, `dplyr` and `tidyverse`.
 
 ##Radial bar plots
 
@@ -24,7 +24,7 @@ DF <- data.frame(variable = as.factor(1:10),
 head(DF)
 ```
 
-Create a function to compute standard error of mean
+Create a function to compute standard error of mean to reprsent some of the uncertainty in the data
 ```{r }
 se <- function(x) sqrt(var(x)/length(x)) 
 set.seed(9876) 
