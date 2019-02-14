@@ -149,6 +149,41 @@ ggplot(DF5, aes(y=value)) +
   theme_minimal()
 ```
 
+###Spider plot
+Create a function to obtain straight lines
+```{r}
+coord_radar <- 
+  function(theta='x', start=0, direction=1){
+    # input parameter sanity check
+    match.arg(theta, c('x','y'))
+    
+    ggproto(
+      NULL, CoordPolar, 
+      theta=theta, r=ifelse(theta=='x','y','x'),
+      start=start, direction=sign(direction),
+      is_linear=function() TRUE)
+  }
+```
+
+Create a new dataset and a spider plot
+```{r}
+factor <- c(rep("A", 16), rep("B", 16))
+variable <- as.factor(c(1:16))
+value <- sample(c(1:10),32,replace = T)
+
+#To close the plot it is important to add an "extra" level of variable which needs the same value as the level 1. Both factors ("A" and "B") need this correction.
+
+value[16] <- value[1]
+value[32] <- value[17]  
+ 
+
+data <- data.frame(factor = factor, variable = variable, value = value)
+
+ggplot(data, aes(as.numeric(data$variable),value)) + coord_radar() +
+  geom_path() + scale_x_continuous(breaks = c(1:15)) +
+  labs(x = "variable") + facet_wrap(.~ factor) + theme_minimal()
+```
+
 ##Plot high dimensional data
 
 Plot data which is all continuous
