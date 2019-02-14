@@ -150,7 +150,9 @@ ggplot(DF5, aes(y=value)) +
 ```
 
 ###Spider plot
+
 Create a function to obtain straight lines
+
 ```{r}
 coord_radar <- 
   function(theta='x', start=0, direction=1){
@@ -166,6 +168,7 @@ coord_radar <-
 ```
 
 Create a new dataset and a spider plot
+
 ```{r}
 factor <- c(rep("A", 16), rep("B", 16))
 variable <- as.factor(c(1:16))
