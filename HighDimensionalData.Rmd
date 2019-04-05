@@ -15,7 +15,7 @@ library(tidyverse) #tidyverse includes a number of useful packages
 
 Dealing with large data sets can sometimes be confusing. If you are working in spreadsheets the confusion can reach the point of almost pure chaos. Visualization is a powerful tool that can help you to get an overview of your data. It can also help you report patterns and differences in your data. Aims objectives and hypotheses should, of course, be determined before any data is collected. 
 
-Here we demonstrate a few different approaches for data visualization. We do this for several types of high dimensional data using plotting functions from `ggplot2`, `plyr`, `dplyr` and `tidyverse` in the [!R programming language](https://www.r-project.org/).
+Here we demonstrate a few different approaches for data visualization. We do this for several types of high dimensional data using plotting functions from `ggplot2`, `plyr`, `dplyr` and `tidyverse` in the [R programming language](https://www.r-project.org/).
 
 ## Radial bar plots
 
@@ -78,7 +78,10 @@ Rows as names and columns as variables `factor_variable`
 multi_plot + facet_grid(name ~ factor_variable)
 ```
 
-Create a data for grid function with four factor variables and one continuous.
+
+## Radial box plots
+
+To show adial box plot with a data set and grid with four factor variables and one continuous.
 
 ```{r }
 DF3 <- data.frame(name = rep(letters[1:3], length.out = 600),
@@ -88,9 +91,7 @@ DF3 <- data.frame(name = rep(letters[1:3], length.out = 600),
                   value = sample(50, replace = TRUE))
 ```
 
-## Radial box plots
-
-Radial box plot with a data set and grid with four factor variables and one continuous.
+Plot with `ggplot2`
 
 ```{r }
 multi_plot <- ggplot(data = DF3, aes(x=variable, y=value, fill=variable)) +
