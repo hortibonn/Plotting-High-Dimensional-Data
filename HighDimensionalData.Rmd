@@ -53,7 +53,7 @@ Create a data set for radial plots with with three factor variables
 ```{r }
 DF2 <- data.frame(name = rep(letters[1:3], length.out = 30),
                  variable = as.factor(1:5),
-                 variable2 = rep(letters[4:7], length.out = 30),
+                 factor_variable = rep(letters[4:7], length.out = 30),
                  value = sample(10, replace = TRUE))
 ```
 
@@ -71,11 +71,11 @@ multi_plot <- ggplot(DF2, aes(variable, value, fill = variable)) +
   coord_polar()
 ```
 
-Rows as names and columns as variables `variable2`
+Rows as names and columns as variables `factor_variable`
 
 ```{r }
-# Rows are name and columns are variable2
-multi_plot + facet_grid(name ~ variable2)
+# Rows are name and columns are factor_variable
+multi_plot + facet_grid(name ~ factor_variable)
 ```
 
 Create a data for grid function with four factor variables and one continuous.
@@ -83,7 +83,7 @@ Create a data for grid function with four factor variables and one continuous.
 ```{r }
 DF3 <- data.frame(name = rep(letters[1:3], length.out = 600),
                   variable = as.factor(sample(5, replace = TRUE)),
-                  variable2 = rep(letters[4:7], length.out = 600),
+                  factor_variable = rep(letters[4:7], length.out = 600),
                   variable3 = rep(letters[8:16], length.out = 600),
                   value = sample(50, replace = TRUE))
 ```
@@ -103,10 +103,10 @@ multi_plot <- ggplot(data = DF3, aes(x=variable, y=value, fill=variable)) +
 multi_plot
 ```
 
-Radial box plot with rows as names and columns as variables for `variable2`.
+Radial box plot with rows as names and columns as variables for `factor_variable`.
 
 ```{r }
-multi_plot + facet_grid(name ~ variable2)
+multi_plot + facet_grid(name ~ factor_variable)
 ```
 
 ### Radial box plots example using `ToothGrowth` data 
