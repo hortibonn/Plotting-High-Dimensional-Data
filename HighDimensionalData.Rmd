@@ -13,7 +13,7 @@ library(dplyr)
 library(tidyverse) #tidyverse includes a number of useful packages
 ```
 
-Dealing with large data sets can sometimes be confusing. If you are working in spreadsheets the confusion can reach the point of almost pure chaos. Visualization is a powerful tool that can help you to get an overview of your data. It can also help you report patterns and differences in your data. Aims objectives and hypotheses should, of course, be determined before any data is collected. 
+Dealing with large data sets can sometimes be confusing. If you are working in spreadsheets the confusion can reach the point of existential crises bordering on pure chaos. Good visualition tools can help. Visualization can allow you to get an overview of your data. It can also help you report patterns and differences in your data. Aims objectives and hypotheses should, of course, be determined before any data is collected. 
 
 Here we demonstrate a few different approaches for data visualization. We do this for several types of high dimensional data using plotting functions from `ggplot2`, `plyr`, `dplyr` and `tidyverse` in the [R programming language](https://www.r-project.org/).
 
@@ -32,7 +32,7 @@ We also created a function to compute the standard error of the mean to represen
 se <- function(x) sqrt(var(x)/length(x)) 
 ```
 
-Plot using the functions above and the `ggplot2` library.
+Create a radial bar plot using the functions above and the `ggplot2` library.
 
 ```{r }
 ggplot(DF, aes(variable, value, fill = variable)) +
@@ -57,7 +57,7 @@ DF2 <- data.frame(name = rep(letters[1:3], length.out = 30),
                  value = sample(10, replace = TRUE))
 ```
 
-Radial plots with three factor variables
+Plot radial plots with three factor variables
 
 ```{r }
 multi_plot <- ggplot(DF2, aes(variable, value, fill = variable)) +
@@ -71,7 +71,7 @@ multi_plot <- ggplot(DF2, aes(variable, value, fill = variable)) +
   coord_polar()
 ```
 
-Rows as names and columns as variables `factor_variable`
+Plot with rows as names and columns as variables `factor_variable`
 
 ```{r }
 # Rows are name and columns are factor_variable
@@ -81,7 +81,7 @@ multi_plot + facet_grid(name ~ factor_variable)
 
 ## Radial box plots
 
-To show adial box plot with a data set and grid with four factor variables and one continuous.
+To show a radial box plot with a data set and grid with four factor variables and one continuous.
 
 ```{r }
 DF3 <- data.frame(name = rep(letters[1:3], length.out = 600),
@@ -91,7 +91,7 @@ DF3 <- data.frame(name = rep(letters[1:3], length.out = 600),
                   value = sample(50, replace = TRUE))
 ```
 
-Plot with `ggplot2`
+Plot with `ggplot2` functions
 
 ```{r }
 multi_plot <- ggplot(data = DF3, aes(x=variable, y=value, fill=variable)) +
