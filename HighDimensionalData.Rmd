@@ -1,6 +1,6 @@
 ---
 title: "Visualizing high dimensional data"
-author: "Cory Whitney, Eduardo Fernandez"
+author: "Cory Whitney, Eduardo Fernández"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -162,19 +162,19 @@ ggplot(DF5, aes(y=value)) +
 
 ## Spider plot
 
-To demonstrate the spider plot data visualization we create a function to obtain straight lines using `match.arg` from base R.
+To demonstrate the spider plot data visualization we use a function<sup>1</sup> to obtain straight lines using `match.arg` from base R.
 
 ```{r}
 coord_radar <- 
-  function(theta='x', start=0, direction=1){
+  function(theta = 'x', start = 0, direction = 1){
     # input parameter sanity check
-    match.arg(theta, c('x','y'))
+    match.arg(theta, c('x', 'y'))
     
     ggproto(
       NULL, CoordPolar, 
-      theta=theta, r=ifelse(theta=='x','y','x'),
-      start=start, direction=sign(direction),
-      is_linear=function() TRUE)
+      theta = theta, r = ifelse(theta == 'x', 'y', 'x'),
+      start = start, direction = sign(direction),
+      is_linear = function() TRUE)
   }
 ```
 
@@ -183,30 +183,32 @@ Create a factor, variable, and value to be plotted in the spider plot using base
 ```{r}
 factor <- c(rep("A", 16), rep("B", 16))
 variable <- as.factor(c(1:16))
-value <- sample(c(1:10),32,replace = T)
+value <- sample(c(1:10), 32, replace = T)
 ```
 
-In order to neatly close the plot we add an empty level to the daat set (a quasi-blank variable) which needs the same value as level 1. For this to work both factors ("A" and "B" in our case) need this correction.
+In order to neatly close the plot we add an empty level to the data set (a quasi-blank variable) which needs the same value as level 1. For this to work both factors ("A" and "B" in our case) need this correction.
 
 ```{r}
 value[16] <- value[1]
 value[32] <- value[17]  
 ```
 
-We add the factor, variable, and value togteher with the blank variable to a data set using `data.frame`. 
+We add the factor, variable, and value together with the blank variable to a data set using `data.frame`. 
 
 ```{r}
 data <- data.frame(factor = factor, variable = variable, value = value)
 ```
 
-Plto with the `ggplot2` library.
+Plot with the `ggplot2` library.
 
 ```{r}
-ggplot(data, aes(as.numeric(data$variable),value)) + 
+ggplot(data, aes(as.numeric(data$variable), value, colour = factor)) + 
   coord_radar() +
-  geom_path() + scale_x_continuous(breaks = c(1:15)) +
+  geom_path(size = 1.5) + scale_x_continuous(breaks = c(1:15)) +
   labs(x = "variable") + 
-  facet_wrap(.~ factor) + 
   theme_minimal()
 ```
 
+## References and resources
+
+<sup>1</sup>The `coord_radar()` function was taken from the question "Closing the lines in a ggplot2 radar / spider chart" from stacko verflow website. <https://stackoverflow.com/questions/28898143/closing-the-lines-in-a-ggplot2-radar-spider-chart>
