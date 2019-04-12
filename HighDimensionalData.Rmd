@@ -1,6 +1,6 @@
 ---
 title: "Visualizing high dimensional data"
-author: "Cory Whitney, Eduardo Fernández"
+author: "Cory Whitney, Eduardo Fernandez"
 date: "`r Sys.Date()`"
 output: html_document
 ---
