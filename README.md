@@ -6,9 +6,9 @@ See the folder `Radial` for R script examples of how to plot some interesting th
 
 ### Dealing with large files in GitHub
 
-To solve the problem of files too heavy for GitHub I pushed with the command 'git push origin master' which allows pushing up to 100MB files. So now the 'AD' file is online. I wil keep trying for options to get files over 100MB in the repository (in repositories in general). 
+To solve the problem of files too heavy for GitHub we pushed with the command 'git push origin master' which allows pushing up to 100MB files. This is not quite big enough to add results of Monte Carlo model examples yet. We will need to keep looking for options to get files over 100MB in the repository (in repositories in general). 
 
-I also tried to use `saveRDS`, which may be a work around but is not yet helpful.
+We also tried to use `saveRDS`, which may be a work around but is not yet helpful.
 
 MC_Results_HG<-read.csv("mcSimulationResults_HG.csv")
 
