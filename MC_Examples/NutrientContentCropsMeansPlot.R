@@ -7,10 +7,6 @@ MC_Results_HG<-read.csv("MC_Examples/mcSimulationResults_HG.csv")
 library(plyr)
 MC_Results<-rbind.fill(MC_Results_UA,MC_Results_HG)
 MC_Results$ID<-seq.int(nrow(MC_Results)) #create unique rownames
-#write.csv(MC_Results, "MC_Results.csv", sep="", row.names=T) 
-
-#mcnutrients<-MC_Results[,143:334]#Just nutrients
-#names(mcnutrients)
 
 library(ggplot2)
 library(multcompView)
