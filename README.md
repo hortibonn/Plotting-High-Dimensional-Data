@@ -4,14 +4,6 @@ See the html for ideas about how to general plots of high dimensionality. <http:
 
 See the folder `Radial` for R script examples of how to plot some interesting things (these are mostly covered in the vignette).
 
-## MC Simulations
-
-The `mcSimulationResults.csv` file comes out of each `decisionSupport` welfare decision analysis and can be mined for visualizations. See the `MC_Examples` folder for how to extract and compare model outputs from `decisionSupport`. 
-
-The simulations files from the Uganda example have over 1 billion data points and are quite heavy. The one containing Monte Carlo results for agricultural development 'AD' is 52MB and the one for homegardens 'HG' is 155MB. 
-
-To use the files in the `MC_Examples` folder you must download the decisonSupport output files from Dropbox <https://www.dropbox.com/sh/u20heealspgtw86/AADgFCI4XTzEqNm0v0s4q932a?dl=0> and store them locally, they are too heavy for GitHub. 
-
 ### Dealing with large files in GitHub
 
 To solve the problem of files too heavy for GitHub I pushed with the command 'git push origin master' which allows pushing up to 100MB files. So now the 'AD' file is online. I wil keep trying for options to get files over 100MB in the repository (in repositories in general). 
