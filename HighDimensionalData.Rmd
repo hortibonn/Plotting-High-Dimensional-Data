@@ -78,6 +78,8 @@ Plot with rows as names and columns as variables `factor_variable`
 multi_plot + facet_grid(name ~ factor_variable)
 ```
 
+More on making polar barplots from [this blog](http://rstudio-pubs-static.s3.amazonaws.com/72298_c1ba7f77276a4f27a0f375cadc9fac5d.html)
+
 
 ## Radial box plots
 
@@ -159,6 +161,10 @@ ggplot(DF5, aes(y=value)) +
   coord_polar(theta='y') + 
   theme_minimal()
 ```
+
+Learn more about [polar coordinates](https://ggplot2.tidyverse.org/reference/coord_polar.html)
+
+Here is a thread about some more helpful options and scripts for making [sunbursts and donut plots](https://stackoverflow.com/questions/26748069/ggplot2-pie-and-donut-chart-on-same-plot).
 
 ## Spider plot
 
