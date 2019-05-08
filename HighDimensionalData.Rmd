@@ -13,9 +13,11 @@ library(dplyr)
 library(tidyverse) #tidyverse includes a number of useful packages
 ```
 
-Dealing with large data sets can sometimes be confusing. If you are working in spreadsheets the confusion can reach the point of existential crises bordering on pure chaos. Good visualition tools can help. Visualization can allow you to get an overview of your data. It can also help you report patterns and differences in your data. Aims objectives and hypotheses should, of course, be determined before any data is collected. 
+Dealing with large data sets can sometimes be confusing. If you are working in spreadsheets the confusion can reach the point of existential crises bordering on pure chaos. Good visualition tools can help. Visualization can allow you to get an overview of your data. It can also help you report patterns and differences in your data. 
 
-Here we demonstrate a few different approaches for data visualization. We do this for several types of high dimensional data using plotting functions from `ggplot2`, `plyr`, `dplyr` and `tidyverse` in the [R programming language](https://www.r-project.org/).
+Needless to say any aims objectives and hypotheses should be determined before any data is collected. Data visualization is a good time to get a clear sense for how your data looks, but is not the time to start making up hypotheses about it.
+
+Here we demonstrate a few different approaches for data visualization. We do this for several types of high dimensional data using plotting functions from `tidyverse` libraries including `ggplot2`, `plyr` and `dplyr` among others in the [R programming language](https://www.r-project.org/).
 
 ## Radial bar plots
 
@@ -213,6 +215,36 @@ ggplot(data, aes(as.numeric(data$variable), value, colour = factor)) +
   geom_path(size = 1.5) + scale_x_continuous(breaks = c(1:15)) +
   labs(x = "variable") + 
   theme_minimal()
+```
+
+## Violin plot with boxplot overlays and ridgeline plots using `OrchardSprays` data
+
+```{r echo=FALSE}
+library(ggridges)
+```
+
+From the `tidyverse` [Violin plot](https://ggplot2.tidyverse.org/reference/geom_violin.html) examples
+
+```{r}
+
+ggplot(OrchardSprays, aes(y=decrease, x=treatment, fill=treatment))+
+  geom_violin()+
+  geom_boxplot(width=0.1)+
+  theme(legend.position = "none")
+
+```
+
+### Ridgeline plot
+
+A variation on the example from [edav](https://edav.info/ridgeline.html) using the `ggridges` library.
+
+More examples from [CRAN](https://rdrr.io/cran/ggridges/man/geom_ridgeline_gradient.html)
+
+```{r}
+ggplot(OrchardSprays, aes(x=decrease,y=treatment,fill=treatment))+
+  geom_density_ridges_gradient(scale=2) + theme_ridges()+
+  theme(legend.position = "none")
+
 ```
 
 ## References and resources
