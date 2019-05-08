@@ -21,7 +21,7 @@ Here we demonstrate a few different approaches for data visualization. We do thi
 
 ## Radial bar plots
 
-For showing off options for radial bar plots we created an example data set with a factor variable using the `data.frame` and `sample` functions in base R.
+Becuase plots of high dimensional data do not always need an x-axis we sometimes compress it to a point using [polar coordinates](https://ggplot2.tidyverse.org/reference/coord_polar.html). For showing off options for radial bar plots we created an example data set with a factor variable using the `data.frame` and `sample` functions in base R.
 
 ```{r }
 DF <- data.frame(variable = as.factor(1:10),
@@ -144,7 +144,9 @@ box_plot + facet_grid(. ~ supp)
 
 ## Sunburst plot
 
-To demonstrate a sunburst-style barplot confined to a circle we create small data set using `data.frame`.
+To demonstrate a sunburst-style barplot confined to a circle we create small data set using `data.frame`. 
+
+Here is a thread about some more helpful options and scripts for making [sunbursts and donut plots](https://stackoverflow.com/questions/26748069/ggplot2-pie-and-donut-chart-on-same-plot).
 
 ```{r }
 DF5 <- data.frame(
@@ -163,10 +165,6 @@ ggplot(DF5, aes(y=value)) +
   coord_polar(theta='y') + 
   theme_minimal()
 ```
-
-Learn more about [polar coordinates](https://ggplot2.tidyverse.org/reference/coord_polar.html)
-
-Here is a thread about some more helpful options and scripts for making [sunbursts and donut plots](https://stackoverflow.com/questions/26748069/ggplot2-pie-and-donut-chart-on-same-plot).
 
 ## Spider plot
 
