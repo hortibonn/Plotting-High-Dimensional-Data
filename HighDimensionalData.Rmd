@@ -215,6 +215,37 @@ ggplot(data, aes(as.numeric(data$variable), value, colour = factor)) +
   theme_minimal()
 ```
 
+## Violin plot with boxplot overlays and ridgeline plots using `OrchardSprays` data
+
+```{r echo=FALSE}
+library(ggridges)
+```
+
+
+From the `tidyverse` [Violin plot](https://ggplot2.tidyverse.org/reference/geom_violin.html) examples
+
+```{r}
+
+ggplot(OrchardSprays, aes(y=decrease, x=treatment, fill=treatment))+
+  geom_violin()+
+  geom_boxplot(width=0.1)+
+  theme(legend.position = "none")
+
+```
+
+### Ridgeline plot
+
+A variation on the example from [edav](https://edav.info/ridgeline.html) using the `ggridges` library.
+
+More examples from [CRAN](https://rdrr.io/cran/ggridges/man/geom_ridgeline_gradient.html)
+
+```{r}
+ggplot(OrchardSprays, aes(x=decrease,y=treatment,fill=treatment))+
+  geom_density_ridges_gradient(scale=2) + theme_ridges()+
+  theme(legend.position = "none")
+
+```
+
 ## References and resources
 
 <sup>1</sup>The `coord_radar()` function was taken from the question "Closing the lines in a ggplot2 radar / spider chart" from stacko verflow website. <https://stackoverflow.com/questions/28898143/closing-the-lines-in-a-ggplot2-radar-spider-chart>
