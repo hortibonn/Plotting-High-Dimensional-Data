@@ -1,6 +1,6 @@
 # Plotting-High-Dimensional-Data
 
-See the html for ideas about how to general plots of high dimensionality. <http://htmlpreview.github.io/?https://github.com/CWWhitney/Plotting-High-Dimensional-Data/blob/master/HighDimensionalData.html>
+See the html for ideas about how to general plots of high dimensionality. <http://htmlpreview.github.io/?https://github.com/hortibonn/Plotting-High-Dimensional-Data/blob/master/HighDimensionalData.html>
 
 See the folder `Radial` for R script examples of how to plot some interesting things (these are mostly covered in the vignette).
 
