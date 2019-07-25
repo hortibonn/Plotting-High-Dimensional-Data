@@ -78,7 +78,16 @@ Plot with rows as names and columns as variables `factor_variable`
 multi_plot + facet_grid(name ~ factor_variable)
 ```
 
-More on making polar barplots from [this blog](http://rstudio-pubs-static.s3.amazonaws.com/72298_c1ba7f77276a4f27a0f375cadc9fac5d.html)
+Plot with bars going around 
+
+```{r, warnings=FALSE}
+
+multi_plot +
+  coord_polar(theta="y") + 
+  facet_grid(name ~ factor_variable)
+``` 
+
+More on making polar plots from [this blog](http://rstudio-pubs-static.s3.amazonaws.com/72298_c1ba7f77276a4f27a0f375cadc9fac5d.html)
 
 
 ## Radial box plots
