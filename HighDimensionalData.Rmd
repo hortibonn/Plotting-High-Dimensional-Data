@@ -80,6 +80,15 @@ Plot with rows as names and columns as variables `factor_variable`
 multi_plot + facet_grid(name ~ factor_variable)
 ```
 
+Plot with bars going around the circle
+
+```{r }
+# Rows are name and columns are factor_variable
+multi_plot +
+  coord_polar(theta="y")+ 
+  facet_grid(name ~ factor_variable)
+```
+
 More on making polar barplots from [this blog](http://rstudio-pubs-static.s3.amazonaws.com/72298_c1ba7f77276a4f27a0f375cadc9fac5d.html)
 
 
