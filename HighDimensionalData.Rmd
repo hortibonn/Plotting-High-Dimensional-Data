@@ -3,13 +3,16 @@ title: "Visualizing high dimensional data"
 author: "Cory Whitney, Eduardo Fernandez"
 date: "`r Sys.Date()`"
 output: html_document
+bibliography: references/references.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(ggplot2)
-library(plyr)
 library(dplyr)
+library(ggplot2)
+library(ggridges)
+library(plyr)
+library(reshape)
 library(tidyverse) #tidyverse includes a number of useful packages
 ```
 
@@ -17,11 +20,11 @@ Dealing with large data sets can sometimes be confusing. If you are working in s
 
 Needless to say any aims objectives and hypotheses should be determined before any data is collected. Data visualization is a good time to get a clear sense for how your data looks, but is not the time to start making up hypotheses about it.
 
-Here we demonstrate a few different approaches for data visualization. We do this for several types of high dimensional data using plotting functions from `tidyverse` libraries including `ggplot2`, `plyr` and `dplyr` among others in the [R programming language](https://www.r-project.org/).
+Here we demonstrate a few different approaches for data visualization. We do this for several types of high dimensional data using plotting functions from `tidyverse` libraries including `ggplot2`, `plyr` and `dplyr` among others in the [R programming language](https://www.r-project.org/) [@ggplot2; @plyr; @dplyr; @R].
 
 ## Radial bar plots
 
-Becuase plots of high dimensional data do not always need an x-axis we sometimes compress it to a point using [polar coordinates](https://ggplot2.tidyverse.org/reference/coord_polar.html). For showing off options for radial bar plots we created an example data set with a factor variable using the `data.frame` and `sample` functions in base R.
+Plots of high dimensional data do not always need an x-axis to be easy to read. In this case we sometimes compress it to a point using [polar coordinates](https://ggplot2.tidyverse.org/reference/coord_polar.html). For showing off options for radial bar plots we created an example data set with a factor variable using the `data.frame` and `sample` functions in base R.
 
 ```{r }
 DF <- data.frame(variable = as.factor(1:10),
@@ -34,9 +37,9 @@ We also created a function to compute the standard error of the mean to represen
 se <- function(x) sqrt(var(x)/length(x)) 
 ```
 
-Create a radial bar plot using the functions above and the `ggplot2` library.
+We use the same data to create a radial bar plot using the functions above and the `ggplot2` library.
 
-```{r }
+```{r fig.width=7, fig.height=7}
 ggplot(DF, aes(variable, value, fill = variable)) +
   geom_bar(width = 1, stat = "identity", color = "white") +
   geom_errorbar(aes(ymin = value - se(DF$value), 
@@ -50,7 +53,7 @@ ggplot(DF, aes(variable, value, fill = variable)) +
 
 ### Radial bar plots with a number of factor variables
 
-Create a data set for radial plots with with three factor variables
+Create a data set for radial plots with with three factor variables.
 
 ```{r }
 DF2 <- data.frame(name = rep(letters[1:3], length.out = 30),
@@ -59,9 +62,9 @@ DF2 <- data.frame(name = rep(letters[1:3], length.out = 30),
                  value = sample(10, replace = TRUE))
 ```
 
-Plot radial plots with three factor variables
+Plot radial plots with three factor variables.
 
-```{r }
+```{r multi_plot, fig.width=7, fig.height=7}
 multi_plot <- ggplot(DF2, aes(variable, value, fill = variable)) +
   geom_bar(width = 1, stat = "identity", color = "white") +
   geom_errorbar(aes(ymin = value - se(DF2$value), 
@@ -73,23 +76,23 @@ multi_plot <- ggplot(DF2, aes(variable, value, fill = variable)) +
   coord_polar()
 ```
 
-Plot with rows as names and columns as variables `factor_variable`
+Plot with rows as names and columns as variables `factor_variable`.
 
-```{r }
+```{r fig.width=7, fig.height=7}
 # Rows are name and columns are factor_variable
 multi_plot + facet_grid(name ~ factor_variable)
 ```
 
-Plot with bars going around the circle
+Plot with bars going around the circle.
 
-```{r }
+```{r fig.width=7, fig.height=7}
 # Rows are name and columns are factor_variable
 multi_plot +
   coord_polar(theta="y")+ 
   facet_grid(name ~ factor_variable)
 ```
 
-More on making polar barplots from [this blog](http://rstudio-pubs-static.s3.amazonaws.com/72298_c1ba7f77276a4f27a0f375cadc9fac5d.html)
+More on making polar barplots from [this blog](http://rstudio-pubs-static.s3.amazonaws.com/72298_c1ba7f77276a4f27a0f375cadc9fac5d.html).
 
 
 ## Radial box plots
@@ -104,9 +107,9 @@ DF3 <- data.frame(name = rep(letters[1:3], length.out = 600),
                   value = sample(50, replace = TRUE))
 ```
 
-Plot with `ggplot2` functions
+Plot the radial box plot with `ggplot2` functions `geom_boxplot()` and `coord_polar()`.
 
-```{r }
+```{r fig.width=7, fig.height=7}
 multi_plot <- ggplot(data = DF3, aes(x=variable, y=value, fill=variable)) +
   geom_boxplot() +
   scale_y_continuous(breaks = 0:nlevels(DF3$variable)) +
@@ -119,7 +122,7 @@ multi_plot
 
 Radial box plot with rows as names and columns as variables for `factor_variable`.
 
-```{r }
+```{r fig.width=7, fig.height=7}
 multi_plot + facet_grid(name ~ factor_variable)
 ```
 
@@ -164,10 +167,9 @@ DF5 <- data.frame(
   'value'=c(.025, .05, .027, .005, .012, .014, .1, .03, .18))
 ```
 
-
 Create a sunburst-style barplot confined to a circle
 
-```{r }
+```{r fig.width=7, fig.height=7}
 ggplot(DF5, aes(y=value)) +
   geom_bar(aes(fill=level1, x=0), width=.5, stat='identity') + 
   geom_bar(aes(fill=level2, x=.25), width=.25, stat='identity') + 
@@ -177,7 +179,7 @@ ggplot(DF5, aes(y=value)) +
 
 ## Spider plot
 
-To demonstrate the spider plot data visualization we use a function<sup>1</sup> to obtain straight lines using `match.arg` from base R.
+To demonstrate the spider plot data visualization we create the `coord_radar()` function<sup>1</sup> to obtain straight lines using `match.arg()` from base R.
 
 ```{r}
 coord_radar <- 
@@ -211,28 +213,24 @@ value[32] <- value[17]
 We add the factor, variable, and value together with the blank variable to a data set using `data.frame`. 
 
 ```{r}
-data <- data.frame(factor = factor, variable = variable, value = value)
+DF6 <- data.frame(factor = factor, variable = variable, value = value)
 ```
 
 Plot with the `ggplot2` library.
 
-```{r}
-ggplot(data, aes(as.numeric(data$variable), value, colour = factor)) + 
+```{r fig.width=7, fig.height=7}
+ggplot(DF6, aes(as.numeric(DF6$variable), value, colour = factor)) + 
   coord_radar() +
   geom_path(size = 1.5) + scale_x_continuous(breaks = c(1:15)) +
   labs(x = "variable") + 
   theme_minimal()
 ```
 
-## Violin plot with boxplot overlays and ridgeline plots using `OrchardSprays` data
+## Violin plot with boxplot overlays
 
-```{r echo=FALSE, warning=FALSE, message=FALSE}
-library(ggridges)
-```
+Here we use the `OrchardSprays` data to run the example from the `tidyverse` [Violin plot](https://ggplot2.tidyverse.org/reference/geom_violin.html) examples [@tidyverse].
 
-From the `tidyverse` [Violin plot](https://ggplot2.tidyverse.org/reference/geom_violin.html) examples
-
-```{r}
+```{r fig.width=7, fig.height=7}
 
 ggplot(OrchardSprays, aes(y=decrease, x=treatment, fill=treatment))+
   geom_violin()+
@@ -243,17 +241,79 @@ ggplot(OrchardSprays, aes(y=decrease, x=treatment, fill=treatment))+
 
 ### Ridgeline plot
 
-A variation on the example from [edav](https://edav.info/ridgeline.html) using the `ggridges` library.
+A variation on the example from [edav](https://edav.info/ridgeline.html) using the `ggridges` library [@ggridges].
 
 More examples from [CRAN](https://rdrr.io/cran/ggridges/man/geom_ridgeline_gradient.html)
 
 ```{r warning=FALSE, message=FALSE}
+
 ggplot(OrchardSprays, aes(x=decrease,y=treatment,fill=treatment))+
   geom_density_ridges_gradient(scale=2) + theme_ridges()+
   theme(legend.position = "none")
 
 ```
 
-## References and resources
+## Creating heatmaps
 
-<sup>1</sup>The `coord_radar()` function was taken from the question "Closing the lines in a ggplot2 radar / spider chart" from stacko verflow website. <https://stackoverflow.com/questions/28898143/closing-the-lines-in-a-ggplot2-radar-spider-chart>
+Heatmaps are another way of displaying muti-dimensional data in a singl figure. We use the synthesized data from `ethnobotanyR` for this heatmap example [@ethnobotanyR].
+
+```{r heatmap_data}
+#create synthesized use data
+eb_data <- data.frame(replicate(10,sample(rnorm(200, mean=1.5, sd=0.5))))
+names(eb_data) <- gsub(x = names(eb_data), pattern = "X", replacement = "Use_")  
+eb_data$informant <- sample(c('User_1', 'User_2', 'User_3'), 200, replace=TRUE)
+eb_data$sp_name <- sample(c('s1', 's2', 's3', 's4'), 200, replace=TRUE)
+eb_data$year <- sample(c('2018', '2019'), 200, replace=TRUE)
+```
+
+We use the `reshape` library [@reshape] to melt and `geom_tile()` function from `ggplot2` to plot the resulting heatmap.
+
+```{r heatmap_simple, fig.width=10, fig.height=5}
+#reshape data for the plot
+ethno_melt <- reshape::melt(eb_data, id=c("informant","year", "sp_name"))
+
+ggplot(ethno_melt, aes(y = factor(year),  x = factor(sp_name))) +  
+  geom_tile(aes(fill = value)) +  #heatmap
+  scale_fill_continuous(low = "blue", high = "green") + #use model result as color
+  facet_grid(informant ~ variable) + #grid by factor
+ labs(fill='use') +  #legend title
+  theme_minimal()+
+  xlab("sp_name") + ylab("")
+
+```
+
+Here we use a combination of a bubble graph and a heatmap to show several continous variables in the same figure. We start by synthesizing data and conditions for bubble sizes and fill.
+
+```{r heatmap_bubbles_data}
+
+#set heat bubble parameters
+heat_sq <- sample(c(rnorm (10, 5,1)), 150, replace = T)
+circlefill <- heat_sq * 10 + rnorm (length (heat_sq), 0, 3)
+circlesize <- heat_sq * 1.5 + rnorm (length (heat_sq), 0, 3)
+
+#synthesize heat bubble data
+D7 <- data.frame (rowv = rep (1:10, 15), columnv = rep(1:15, each = 10),
+                   heat_sq, circlesize, circlefill)
+```
+
+As above we use `geom_tile()` from the `ggplot2` library to plot this as a heatmap. In addition we use `geom_point()` to put bubbles on the heatmap to more continuos variables by adjusting size and color.
+
+```{r heatmap_bubbles, fig.width=10, fig.height=7}
+
+ggplot(D7, aes(y = factor(rowv),  x = factor(columnv))) +  
+  geom_tile(aes(fill = heat_sq)) +  
+  scale_fill_continuous(low = "blue", high = "red")+      
+  geom_point(aes(colour = circlefill,  size =circlesize))  +    
+  scale_color_gradient(low = "green",   high = "yellow")+     
+  scale_size(range = c(1, 20))+   
+  theme_bw()
+
+```
+
+## Notes
+
+<sup>1</sup>The `coord_radar()` function was taken from the question "Closing the lines in a ggplot2 radar / spider chart" from stackoverflow website. <https://stackoverflow.com/questions/28898143/closing-the-lines-in-a-ggplot2-radar-spider-chart>
+
+## References
+
+
