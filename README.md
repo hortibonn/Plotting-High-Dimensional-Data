@@ -3,9 +3,9 @@
 
 # Plotting-High-Dimensional-Data
 
-Good visualition tools can allow for an overview of complex data and
-interactions. This is a collection of solutions to generate plots of
-high
+Good visualization tools can allow for an overview of complex data and
+interactions. This repository hosts a small collection of solutions to
+generate plots of high
 dimensionality.
 
 <!-- Links: start -->
