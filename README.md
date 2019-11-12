@@ -1,20 +1,41 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
 # Plotting-High-Dimensional-Data
 
-See the html for ideas about how to general plots of high dimensionality. <http://htmlpreview.github.io/?https://github.com/hortibonn/Plotting-High-Dimensional-Data/blob/master/HighDimensionalData.html>
+Good visualition tools can allow for an overview of complex data and
+interactions. This is a collection of solutions to generate plots of
+high
+dimensionality.
 
-See the folder `Radial` for R script examples of how to plot some interesting things (these are mostly covered in the vignette).
+<!-- Links: start -->
 
-### Dealing with large files in GitHub
+| Quick Links                                                                                                                                                             |
+| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [**Large files in Github**](https://github.com/hortibonn/hortibonn#Large%20files%20in%20GitHub)                                                                         |
+| [**Visualizing High Dimensional Data**](http://htmlpreview.github.io/?https://github.com/hortibonn/Plotting-High-Dimensional-Data/blob/master/HighDimensionalData.html) |
+| [**High Dimensional Data Wiki**](https://github.com/hortibonn/High%20Dimensional%20Data/wiki)                                                                           |
 
-To solve the problem of files too heavy for GitHub we pushed with the command 'git push origin master' which allows pushing up to 100MB files. This is not quite big enough to add results of Monte Carlo model examples yet. We will need to keep looking for options to get files over 100MB in the repository (in repositories in general). 
+<!-- Links: end -->
 
-We also tried to use `saveRDS`, which may be a work around but is not yet helpful.
+See the folder `Radial` for R script examples of how to plot some
+interesting things (these are mostly covered in the vignette).
 
-MC_Results_HG<-read.csv("mcSimulationResults_HG.csv")
+### Large files in GitHub
 
-saveRDS(MC_Results_HG,"mcSimulationResults_HG.rds")
+To solve the problem of files too heavy for GitHub we pushed with the
+command ‘git push origin master’ which allows pushing up to 100MB files.
+This is not quite big enough to add results of Monte Carlo model
+examples yet. We will need to keep looking for options to get files over
+100MB in the repository (in repositories in general).
 
-MC_Results_UA<-read.csv("mcSimulationResults_AD.csv")
+We also tried to use `saveRDS`, which may be a work around but is not
+yet helpful.
 
-saveRDS(MC_Results_UA,"mcSimulationResults_AD.rds")
+`MC_Results_HG<-read.csv("mcSimulationResults_HG.csv")`
 
+`saveRDS(MC_Results_HG,"mcSimulationResults_HG.rds")`
+
+`MC_Results_UA<-read.csv("mcSimulationResults_AD.csv")`
+
+`saveRDS(MC_Results_UA,"mcSimulationResults_AD.rds")`
