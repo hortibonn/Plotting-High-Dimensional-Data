@@ -2,12 +2,16 @@
 title: "Visualizing high dimensional data"
 author: "Cory Whitney, Eduardo Fernandez"
 date: "`r Sys.Date()`"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 bibliography: references/references.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
 library(dplyr)
 library(ggplot2)
 library(ggridges)
@@ -51,7 +55,7 @@ ggplot(DF, aes(variable, value, fill = variable)) +
   coord_polar()
 ```
 
-### Radial bar plots with a number of factor variables
+### Radial bar plots & multiple factor variables
 
 Create a data set for radial plots with with three factor variables.
 
@@ -226,7 +230,7 @@ ggplot(DF6, aes(as.numeric(DF6$variable), value, colour = factor)) +
   theme_minimal()
 ```
 
-## Violin plot with boxplot overlays
+## Violin & boxplot overlays
 
 Here we use the `OrchardSprays` data to run the example from the `tidyverse` [Violin plot](https://ggplot2.tidyverse.org/reference/geom_violin.html) examples [@tidyverse].
 
@@ -239,11 +243,10 @@ ggplot(OrchardSprays, aes(y=decrease, x=treatment, fill=treatment))+
 
 ```
 
-### Ridgeline plot
+## Ridgeline plot
 
 A variation on the example from [edav](https://edav.info/ridgeline.html) using the `ggridges` library [@ggridges].
 
-More examples from [CRAN](https://rdrr.io/cran/ggridges/man/geom_ridgeline_gradient.html)
 
 ```{r warning=FALSE, message=FALSE}
 
@@ -253,9 +256,11 @@ ggplot(OrchardSprays, aes(x=decrease,y=treatment,fill=treatment))+
 
 ```
 
-## Creating heatmaps
+More examples on the `rdrr.io` [CRAN](https://rdrr.io/cran/ggridges/man/geom_ridgeline_gradient.html) website.
 
-Heatmaps are another way of displaying muti-dimensional data in a singl figure. We use the synthesized data from `ethnobotanyR` for this heatmap example [@ethnobotanyR].
+## Heatmaps
+
+Heatmaps are another way of displaying muti-dimensional data in a single figure. We use the synthesized data from `ethnobotanyR` for this heatmap example [@ethnobotanyR].
 
 ```{r heatmap_data}
 #create synthesized use data
@@ -282,6 +287,7 @@ ggplot(ethno_melt, aes(y = factor(year),  x = factor(sp_name))) +
 
 ```
 
+### Bubble graph & heatmap
 Here we use a combination of a bubble graph and a heatmap to show several continous variables in the same figure. We start by synthesizing data and conditions for bubble sizes and fill.
 
 ```{r heatmap_bubbles_data}
