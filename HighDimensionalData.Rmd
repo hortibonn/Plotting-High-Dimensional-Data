@@ -1,17 +1,24 @@
 ---
-title: "Visualizing high dimensional data"
-author: "Cory Whitney, Eduardo Fernandez"
+title: "Visualize high dimensional data"
+author: "Cory Whitney, Eduardo Fernandez, Thi Hoa Do"
 date: "`r Sys.Date()`"
 output: 
   html_document:
     toc: true
     toc_float: true
-bibliography: references/references.bib
+bibliography: packages.bib
 ---
+
+<!-- Spelling -->
+<!-- The ABC √ option (upper right on the Rmarkdown console) [can’t believe I didn’t notice this before] -->
+
+<!-- Grammar -->
+<!-- devtools::install_github("ropenscilabs/gramr") and use the run_grammar_checker() on your markdown file.  -->
+<!-- i.e. run_grammar_checker("HighDimensionalData.rmd”)  -->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
+library(bayesplot)
 library(dplyr)
 library(ggplot2)
 library(ggridges)
@@ -20,28 +27,42 @@ library(reshape)
 library(tidyverse) #tidyverse includes a number of useful packages
 ```
 
-Dealing with large data sets can sometimes be confusing. If you are working in spreadsheets the confusion can reach the point of existential crises bordering on pure chaos. Good visualition tools can help. Visualization can allow you to get an overview of your data. It can also help you report patterns and differences in your data. 
+```{r, warning=FALSE, include = FALSE}
+#Automatically write R package citation entries to a .bib file
+knitr::write_bib(c(.packages(), 
+                   'bayesplot', 
+                   'decisionSupport',
+                   'dplyr',
+                   'ethnobotanyR',
+                   'ggplot2', 
+                   'ggridges', 
+                   'plyr', 
+                   'reshape', 
+                   'tidyverse'), 'packages.bib')
+```
+
+Dealing with large data sets can sometimes be confusing. If you are working in spreadsheets the confusion can reach the point of existential crises bordering on pure chaos. Good visualization tools can help. Visualization can allow you to get an overview of your data. It can also help you report patterns and differences in your data. 
 
 Needless to say any aims objectives and hypotheses should be determined before any data is collected. Data visualization is a good time to get a clear sense for how your data looks, but is not the time to start making up hypotheses about it.
 
-Here we demonstrate a few different approaches for data visualization. We do this for several types of high dimensional data using plotting functions from `tidyverse` libraries including `ggplot2`, `plyr` and `dplyr` among others in the [R programming language](https://www.r-project.org/) [@ggplot2; @plyr; @dplyr; @R].
+Here we demonstrate a few different approaches for data visualization. We do this for several types of high dimensional data using plotting functions from `tidyverse` libraries including `ggplot2`, `plyr` and `dplyr` among others in the [R programming language](https://www.r-project.org/) [@R-ggplot2; @R-plyr; @R-dplyr; @R-base].
 
 ## Radial bar plots
 
-Plots of high dimensional data do not always need an x-axis to be easy to read. In this case we sometimes compress it to a point using [polar coordinates](https://ggplot2.tidyverse.org/reference/coord_polar.html). For showing off options for radial bar plots we created an example data set with a factor variable using the `data.frame` and `sample` functions in base R.
+Plots of high dimensional data do not always need an x-axis to be easy to read. In this case we sometimes compress it to a point using [polar coordinates](https://ggplot2.tidyverse.org/reference/coord_polar.html). For showing off options for radial bar plots we created an example data set with a factor variable using the `data.frame` and `sample` functions in base R [@R-base].
 
 ```{r }
 DF <- data.frame(variable = as.factor(1:10),
                  value = sample(10, replace = TRUE))
 ```
 
-We also created a function to compute the standard error of the mean to represent some of the uncertainty in the data using the `sqrt` and `length` functions in base R and the `var` from the `stats` library.
+We also created a function to compute the standard error of the mean to represent some of the uncertainty in the data using the `sqrt` and `length` functions in base R and `var` from the `stats` library [@R-base].
 
 ```{r }
 se <- function(x) sqrt(var(x)/length(x)) 
 ```
 
-We use the same data to create a radial bar plot using the functions above and the `ggplot2` library.
+We use the same data to create a radial bar plot using the functions above and the `ggplot2` library [@R-ggplot2].
 
 ```{r fig.width=7, fig.height=7}
 ggplot(DF, aes(variable, value, fill = variable)) +
@@ -96,7 +117,7 @@ multi_plot +
   facet_grid(name ~ factor_variable)
 ```
 
-More on making polar barplots from [this blog](http://rstudio-pubs-static.s3.amazonaws.com/72298_c1ba7f77276a4f27a0f375cadc9fac5d.html).
+More on making polar bar plots from [this blog](http://rstudio-pubs-static.s3.amazonaws.com/72298_c1ba7f77276a4f27a0f375cadc9fac5d.html).
 
 
 ## Radial box plots
@@ -111,7 +132,7 @@ DF3 <- data.frame(name = rep(letters[1:3], length.out = 600),
                   value = sample(50, replace = TRUE))
 ```
 
-Plot the radial box plot with `ggplot2` functions `geom_boxplot()` and `coord_polar()`.
+Plot the radial box plot with `ggplot2` functions `geom_boxplot()` and `coord_polar()` [@R-ggplot2].
 
 ```{r fig.width=7, fig.height=7}
 multi_plot <- ggplot(data = DF3, aes(x=variable, y=value, fill=variable)) +
@@ -145,14 +166,14 @@ box_plot <- ggplot(DF4, aes(x=dose, y=len, group=dose)) +
   coord_polar()
 ```
 
-Split the radial boxplot in a vertically
+Split the radial box plot vertically
 
 ```{r }
 # 
 box_plot + facet_grid(supp ~ .)
 ```
 
-Split the radial boxplot horizontally 
+Split the radial box plot horizontally 
 
 ```{r }
 box_plot + facet_grid(. ~ supp)
@@ -160,7 +181,7 @@ box_plot + facet_grid(. ~ supp)
 
 ## Sunburst plot
 
-To demonstrate a sunburst-style barplot confined to a circle we create small data set using `data.frame`. 
+To demonstrate a sunburst-style bar plot confined to a circle we create small data set using `data.frame`. 
 
 Here is a thread about some more helpful options and scripts for making [sunbursts and donut plots](https://stackoverflow.com/questions/26748069/ggplot2-pie-and-donut-chart-on-same-plot).
 
@@ -171,7 +192,7 @@ DF5 <- data.frame(
   'value'=c(.025, .05, .027, .005, .012, .014, .1, .03, .18))
 ```
 
-Create a sunburst-style barplot confined to a circle
+Create a sunburst-style bar plot confined to a circle
 
 ```{r fig.width=7, fig.height=7}
 ggplot(DF5, aes(y=value)) +
@@ -183,7 +204,7 @@ ggplot(DF5, aes(y=value)) +
 
 ## Spider plot
 
-To demonstrate the spider plot data visualization we create the `coord_radar()` function<sup>1</sup> to obtain straight lines using `match.arg()` from base R.
+To demonstrate the spider plot data visualization we create the `coord_radar()` function<sup>1</sup> to obtain straight lines using `match.arg()` from base R [@R-base].
 
 ```{r}
 coord_radar <- 
@@ -199,7 +220,7 @@ coord_radar <-
   }
 ```
 
-Create a factor, variable, and value to be plotted in the spider plot using base R functions.
+Create a factor, variable, and value to be plotted in the spider plot using base R functions [@R-base].
 
 ```{r}
 factor <- c(rep("A", 16), rep("B", 16))
@@ -220,7 +241,7 @@ We add the factor, variable, and value together with the blank variable to a dat
 DF6 <- data.frame(factor = factor, variable = variable, value = value)
 ```
 
-Plot with the `ggplot2` library.
+Plot with the `ggplot2` library [@R-ggplot2].
 
 ```{r fig.width=7, fig.height=7}
 ggplot(DF6, aes(as.numeric(DF6$variable), value, colour = factor)) + 
@@ -230,37 +251,9 @@ ggplot(DF6, aes(as.numeric(DF6$variable), value, colour = factor)) +
   theme_minimal()
 ```
 
-## Violin & boxplot overlays
+## Heat maps
 
-Here we use the `OrchardSprays` data to run the example from the `tidyverse` [Violin plot](https://ggplot2.tidyverse.org/reference/geom_violin.html) examples [@tidyverse].
-
-```{r fig.width=7, fig.height=7}
-
-ggplot(OrchardSprays, aes(y=decrease, x=treatment, fill=treatment))+
-  geom_violin()+
-  geom_boxplot(width=0.1)+
-  theme(legend.position = "none")
-
-```
-
-## Ridgeline plot
-
-A variation on the example from [edav](https://edav.info/ridgeline.html) using the `ggridges` library [@ggridges].
-
-
-```{r warning=FALSE, message=FALSE}
-
-ggplot(OrchardSprays, aes(x=decrease,y=treatment,fill=treatment))+
-  geom_density_ridges_gradient(scale=2) + theme_ridges()+
-  theme(legend.position = "none")
-
-```
-
-More examples on the `rdrr.io` [CRAN](https://rdrr.io/cran/ggridges/man/geom_ridgeline_gradient.html) website.
-
-## Heatmaps
-
-Heatmaps are another way of displaying muti-dimensional data in a single figure. We use the synthesized data from `ethnobotanyR` for this heatmap example [@ethnobotanyR].
+Heat maps are another way of displaying multidimensional data in a single figure. We use the synthesized data from `ethnobotanyR` for this heat map example [@R-ethnobotanyR].
 
 ```{r heatmap_data}
 #create synthesized use data
@@ -271,7 +264,7 @@ eb_data$sp_name <- sample(c('s1', 's2', 's3', 's4'), 200, replace=TRUE)
 eb_data$year <- sample(c('2018', '2019'), 200, replace=TRUE)
 ```
 
-We use the `reshape` library [@reshape] to melt and `geom_tile()` function from `ggplot2` to plot the resulting heatmap.
+We use the `reshape` library [@R-reshape] to melt and `geom_tile()` function from `ggplot2` to plot the resulting heat map.
 
 ```{r heatmap_simple, fig.width=10, fig.height=5}
 #reshape data for the plot
@@ -287,8 +280,9 @@ ggplot(ethno_melt, aes(y = factor(year),  x = factor(sp_name))) +
 
 ```
 
-### Bubble graph & heatmap
-Here we use a combination of a bubble graph and a heatmap to show several continous variables in the same figure. We start by synthesizing data and conditions for bubble sizes and fill.
+### Bubble graph & heat map
+
+Here we use a combination of a bubble graph and a heat map to show several continuous variables in the same figure. We start by synthesizing data and conditions for bubble sizes and fill.
 
 ```{r heatmap_bubbles_data}
 
@@ -302,7 +296,7 @@ D7 <- data.frame (rowv = rep (1:10, 15), columnv = rep(1:15, each = 10),
                    heat_sq, circlesize, circlefill)
 ```
 
-As above we use `geom_tile()` from the `ggplot2` library to plot this as a heatmap. In addition we use `geom_point()` to put bubbles on the heatmap to more continuos variables by adjusting size and color.
+As above we use `geom_tile()` from the `ggplot2` library to plot this as a heat map. In addition we use `geom_point()` to put bubbles on the heat map to more continuous variables by adjusting size and color.
 
 ```{r heatmap_bubbles, fig.width=10, fig.height=7}
 
@@ -316,21 +310,49 @@ ggplot(D7, aes(y = factor(rowv),  x = factor(columnv))) +
 
 ```
 
-## Uncertainty intervals
 
-Here demonstrated various graphical options to visualize uncertainty intervals (e.g.outcomes of Monte Carlo simulation)
+## Violin & box plot overlays
+
+Here we use the `OrchardSprays` data to run the example from the `tidyverse` [Violin plot](https://ggplot2.tidyverse.org/reference/geom_violin.html) examples [@R-tidyverse].
+
+```{r fig.width=7, fig.height=7}
+
+ggplot(OrchardSprays, aes(y=decrease, x=treatment, fill=treatment))+
+  geom_violin()+
+  geom_boxplot(width=0.1)+
+  theme(legend.position = "none")
+
+```
+
+## Ridge line plot
+
+A variation on the example from [edav](https://edav.info/ridgeline.html) using the `ggridges` library [@R-ggridges].
+
+```{r warning=FALSE, message=FALSE}
+
+ggplot(OrchardSprays, aes(x=decrease,y=treatment,fill=treatment))+
+  geom_density_ridges_gradient(scale=2) + theme_ridges()+
+  theme(legend.position = "none")
+
+```
+
+More examples on the `rdrr.io` [CRAN](https://rdrr.io/cran/ggridges/man/geom_ridgeline_gradient.html) website.
+
+## Visualizing uncertainty
+
+Here we demonstrate various graphical options to visualize uncertainty intervals of outcomes of Monte Carlo simulations.
 
 ```{r message=FALSE,include=FALSE}
 library(bayesplot)
 ```
 
-Assume a data set of yield distributions of three different farming practices
+Assume a data set of yield distributions of three different farming practices:
 
 ```{r}
 test<- data.frame("practice 1" = rnorm(1000,8,1.5), "practice 2" = rnorm(1000,7,1), "practice 3" = rnorm(1000, 5, 0.5))
 ```
 
-We can use the function `mcmc_intervals()`or `mcmc_areas()`to plot the data set
+We can use the function `mcmc_intervals()`or `mcmc_areas()`from `bayesplot` library to plot the data set [@R-bayesplot]
 
 ### with `mcmc_intervals()`
 
@@ -347,7 +369,8 @@ mcmc_areas(test,prob = 0.9,point_est = "median")
 ```
 
 ### Comparative density curves
-We can also use `geom_density()`in `ggplot2`to compare the spread of different distributions:
+
+We can also use `geom_density()`in `ggplot2` to compare the spread of different distributions [@R-ggplot2]:
 
 ```{r fig.width=7, fig.height=4}
 stacked_test<- stack(test)
@@ -357,7 +380,8 @@ ggplot(stacked_test,aes(x=values,group=ind,fill=ind ))+
 ```
 
 ### Comparative histogram
-Use `geom_histogram()`to show the histogram of the data in comparison:
+
+Use `ggplot2` `geom_histogram()`function to show the histogram of the data in comparison:
 
 ```{r fig.width=7, fig.height=4}
 ggplot(stacked_test,aes(x=values))+ 
@@ -367,17 +391,17 @@ ggplot(stacked_test,aes(x=values))+
 ```
 
  
-## Barplot
+## Bar plot
 
-Here demonstrated an option to visualize a set of variable with multiple attributes.
+Here demonstrate an option to visualize a set of variables with multiple attributes.
 
-Create example data frame: Assume that we have five independent variables that are involved in the model to predict yield (above example). After running a regression analysis and performing value of information analysis, we got a data set with three attribute for each variable:
+Create an example data frame: Assume that we have five independent variables that are involved in the model to predict yield (above example). After running a regression analysis and performing value of information analysis, we get a data set with three attributes for each variable:
 
 1. VIP score: Show the strength of the relationship. 
 
-2. Correlation coefficient: show the direction of the relationship
+1. Correlation coefficient: show the direction of the relationship
 
-3. Expected value of perfect information (EVPI): additional gain in yield when having more information on particular variable
+1. Expected value of perfect information (EVPI): additional gain in yield when having more information on particular variable
 
 ```{r}
 ob<-data.frame("variable"=c("variable 1","variable 2","variable 3","variable 4","variable 5"), 
@@ -387,7 +411,7 @@ ob<-data.frame("variable"=c("variable 1","variable 2","variable 3","variable 4",
 ```
 
 
-### Cowplot
+### Cow plot
 
 We can use `cowplot` to represent all the attributes in one single plot.
 
@@ -450,7 +474,7 @@ gg2 <- ggplot_gtable(ggplot_build(q))
 gg.mid <- ggplot_gtable(ggplot_build(g.mid))
 ```
 
-After having all element plot, use cowplot to put everything together:
+After having all element plot, use cow plot to put everything together:
 
 ```{r fig.height = 3, fig.width = 7, fig.align = "centre",echo=TRUE}
 cowplot::plot_grid(gg1,gg.mid,gg2, ncol = 3, align = "h") 
