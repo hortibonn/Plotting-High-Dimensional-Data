@@ -316,6 +316,146 @@ ggplot(D7, aes(y = factor(rowv),  x = factor(columnv))) +
 
 ```
 
+## Uncertainty intervals
+
+Here demonstrated various graphical options to visualize uncertainty intervals (e.g.outcomes of Monte Carlo simulation)
+
+```{r message=FALSE,include=FALSE}
+library(bayesplot)
+```
+
+Assume a data set of yield distributions of three different farming practices
+
+```{r}
+test<- data.frame("practice 1" = rnorm(1000,8,1.5), "practice 2" = rnorm(1000,7,1), "practice 3" = rnorm(1000, 5, 0.5))
+```
+
+We can use the function `mcmc_intervals()`or `mcmc_areas()`to plot the data set
+
+### with `mcmc_intervals()`
+
+```{r fig.width=7, fig.height=4}
+color_scheme_set("red")
+mcmc_intervals(test,prob = 0.5,prob_outer = 0.9,point_est = "median")
+```
+
+### with `mcmc_areas()`
+
+```{r fig.width=7, fig.height=4}
+color_scheme_set("blue")
+mcmc_areas(test,prob = 0.9,point_est = "median")
+```
+
+### Comparative density curves
+We can also use `geom_density()`in `ggplot2`to compare the spread of different distributions:
+
+```{r fig.width=7, fig.height=4}
+stacked_test<- stack(test)
+ggplot(stacked_test,aes(x=values,group=ind,fill=ind ))+
+  geom_density(colour=NA,alpha=.5)+
+  ylab("Probability density")+xlab("Yield")
+```
+
+### Comparative histogram
+Use `geom_histogram()`to show the histogram of the data in comparison:
+
+```{r fig.width=7, fig.height=4}
+ggplot(stacked_test,aes(x=values))+ 
+  geom_histogram(data=subset(stacked_test,ind =='practice.1'),aes(fill = ind), alpha = 0.5, bins = 150)+ 
+  geom_histogram(data=subset(stacked_test,ind == 'practice.2'),aes(fill = ind), alpha = 0.5, bins = 150) +
+  geom_histogram(data=subset(stacked_test,ind == 'practice.3'),aes(fill = ind), alpha = 0.5, bins = 150) 
+```
+
+ 
+## Barplot
+
+Here demonstrated an option to visualize a set of variable with multiple attributes.
+
+Create example data frame: Assume that we have five independent variables that are involved in the model to predict yield (above example). After running a regression analysis and performing value of information analysis, we got a data set with three attribute for each variable:
+
+1. VIP score: Show the strength of the relationship. 
+
+2. Correlation coefficient: show the direction of the relationship
+
+3. Expected value of perfect information (EVPI): additional gain in yield when having more information on particular variable
+
+```{r}
+ob<-data.frame("variable"=c("variable 1","variable 2","variable 3","variable 4","variable 5"), 
+           "Variable_Importance"=c(1,0.3,0.5,4,2), 
+           "Coefficient"=c(-1.5,0.6,-0.2,2.7,0.9), 
+           "Value_of_information"=c(0.5,0.01,0.6,1,0.7), stringsAsFactors = TRUE)
+```
+
+
+### Cowplot
+
+We can use `cowplot` to represent all the attributes in one single plot.
+
+First we create element plots for the combined plot:
+
+```{r message=FALSE, warning=FALSE}
+ob$Category[ob$Coefficient > 0] = "cadetblue"
+ob$Category[ob$Coefficient < 0] = "firebrick"
+
+ob$variable <- factor(ob$variable, levels = ob[order(ob$Variable_Importance),"variable"])
+
+p <- ggplot(ob,aes(x=variable,y=Variable_Importance))+
+  geom_bar(aes(fill=ob$Category),stat ="identity")+ 
+  ggtitle("Variable Importance")+
+  ylab("VIP scores")+
+  xlab(NULL)+
+  scale_fill_manual(values = c("cadetblue","firebrick","grey"))+
+  theme(axis.title.y =element_text(color="black", size=10), 
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        plot.margin = unit(c(1,-1,1,0), "mm")) +
+  geom_hline(yintercept = 1, size=0.2)+
+  theme(legend.position = "none")+
+  scale_y_reverse() + 
+  coord_flip()
+
+q <-  ggplot(data = ob, aes(x = ob$variable, y = ob$Value_of_information))+
+  geom_bar(fill = "deepskyblue3",stat = "identity") + 
+  ggtitle("Value of Information") + 
+  ylab("EVPI")+ 
+  xlab(NULL)+
+  theme(axis.title.y = element_text(color="black", size=10), 
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(),
+        panel.grid=element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        plot.margin = unit(c(1,0,1,-1), "mm")) +
+  coord_flip()
+
+g.mid <- ggplot(ob,aes(x=1,y=ob$variable))+geom_text(aes(label=ob$variable))+
+  geom_segment(aes(x=0,xend=0,yend=ob$variable))+
+  geom_segment(aes(x=0,xend=0,yend=ob$variable))+
+  ggtitle("")+
+  ylab(NULL)+
+  scale_x_continuous(expand=c(0,0),limits=c(1.0,1.0))+
+  theme(axis.title=element_blank(),
+        panel.grid=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        panel.background=element_blank(),
+        axis.text.x=element_text(size=10, color=NA),
+        axis.ticks.x=element_line(size=10, color=NA),
+        plot.margin = unit(c(1,0,1,0), "mm"))
+
+gg1 <- ggplot_gtable(ggplot_build(p))
+gg2 <- ggplot_gtable(ggplot_build(q))
+gg.mid <- ggplot_gtable(ggplot_build(g.mid))
+```
+
+After having all element plot, use cowplot to put everything together:
+
+```{r fig.height = 3, fig.width = 7, fig.align = "centre",echo=TRUE}
+cowplot::plot_grid(gg1,gg.mid,gg2, ncol = 3, align = "h") 
+```
+
 ## Notes
 
 <sup>1</sup>The `coord_radar()` function was taken from the question "Closing the lines in a ggplot2 radar / spider chart" from stackoverflow website. <https://stackoverflow.com/questions/28898143/closing-the-lines-in-a-ggplot2-radar-spider-chart>
