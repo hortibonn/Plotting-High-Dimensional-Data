@@ -1,6 +1,6 @@
 ---
 title: "Visualize high dimensional data"
-author: "Cory Whitney, Eduardo Fernandez, Thi Hoa Do"
+author: "Cory Whitney, Eduardo Fernandez, Thi Hoa Do, Marius Ruett"
 output: 
   html_document:
     toc: true
@@ -25,7 +25,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(bayesplot)
 library(dplyr)
 library(ggplot2)
+library(ggpubr)
 library(ggridges)
+library(ggstance)
 library(plyr)
 library(reshape)
 library(tidyverse) #tidyverse includes a number of useful packages
@@ -374,6 +376,7 @@ We can also use `geom_density()`in `ggplot2` to compare the spread of different 
 
 ```{r fig.width=7, fig.height=4}
 stacked_test <- stack(test)
+
 ggplot(stacked_test,aes(x=values,group=ind,fill=ind ))+
   geom_density(colour=NA,alpha=.5)+
   ylab("Probability density")+
@@ -392,7 +395,7 @@ ggplot(stacked_test,aes(x=values))+
 ```
 
  
-## Bar plot
+### Bar plot
 
 Here demonstrate an option to visualize a set of variables with multiple attributes.
 
@@ -455,7 +458,8 @@ q <-  ggplot(data = ob, aes(x = ob$variable, y = ob$Value_of_information))+
         plot.margin = unit(c(1,0,1,-1), "mm")) +
   coord_flip()
 
-g.mid <- ggplot(ob,aes(x=1,y=ob$variable))+geom_text(aes(label=ob$variable))+
+g.mid <- ggplot(ob,aes(x=1,y=ob$variable))+
+  geom_text(aes(label=ob$variable))+
   geom_segment(aes(x=0,xend=0,yend=ob$variable))+
   geom_segment(aes(x=0,xend=0,yend=ob$variable))+
   ggtitle("")+
@@ -479,6 +483,209 @@ After generating all element plots, use cow plot to put everything together:
 
 ```{r fig.height = 3, fig.width = 7, fig.align = "centre",echo=TRUE}
 cowplot::plot_grid(gg1,gg.mid,gg2, ncol = 3, align = "h") 
+```
+
+### Box plot probability distributions
+
+Here we plot partially transparent probability distributions with box plots in the foreground. Input data is an example such as that from a Monte Carlo simulation in the `decisionSupport` package [@R-decisionSupport].
+
+
+```{r}
+test.data <- data.frame("decision1" = rnorm(1000,150,20), "decision2" = rnorm(1000,120,20), "decision3" = rnorm(1000, 80, 20), "decision4" = rnorm(1000, 200, 20))
+```
+
+Use `dplyr` [@R-dplyr] to select data for the various hypothetical decisions and the `geom_boxploth` and `geom_density` functions of `ggplot2` to generate plots [@R-ggplot]:
+
+Option 1
+
+```{r}
+data_plot_decision1 <-
+  dplyr::select(test.data, starts_with("decision1")) %>%
+  stack(drop = FALSE)
+
+data_plot_decision1$values <- as.numeric(data_plot_decision1$values)
+
+plot_decision1 <-
+  ggplot(data_plot_decision1, 
+         aes(x = values, y = ind, fill = ind)) +
+  geom_density(aes(y = ..count..), alpha = 0.5) +
+  scale_fill_manual(
+    labels = ("Decision1"),
+    values = ("blue3") ,
+    guide = "legend") +
+  geom_boxploth(aes(x = values, y = 2.5), 
+                width = 5, fill = "blue3") +
+  scale_x_continuous(
+    labels = scales::dollar_format(suffix = "Euro", 
+                                   prefix = ""),
+    limits = c(0, 280)) +
+  ylim(breaks = c(0, 24)) +
+  annotate("text", x = 10, y = 15,
+    label = 'atop(bold("Decision1"))',
+    size = 4,
+    parse = TRUE) +
+  theme(
+    axis.title.x = element_text(color = "white"),
+    axis.title.y = element_text(),
+    axis.text.x = element_text(color = "white"),
+    axis.ticks.x = element_line(),
+    legend.title = element_blank(),
+    legend.position = "none",
+    legend.text = element_text(size = 12),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 12, face = "bold"),
+    axis.line = element_line(colour = "black"),
+    panel.background = element_blank()) +
+  xlab("Net benefit") +
+  ylab("Frequency")
+```
+
+Option 2
+
+```{r}
+
+data_plot_decision2 <-
+  dplyr::select(test.data, starts_with("decision2")) %>%
+  stack(drop = FALSE)
+data_plot_decision2$values <- as.numeric(data_plot_decision2$values)
+
+plot_decision2 <-
+  ggplot(data_plot_decision2, aes(x = values, y = ind, fill = ind)) +
+  geom_density(aes(y = ..count..), alpha = 0.5) +
+  scale_fill_manual(
+    labels = ("Decision2"),
+    values = ("red3") ,
+    guide = "legend") +
+  geom_boxploth(aes(x = values, y = 2.5), width = 5, fill = "red3") +
+  scale_x_continuous(
+    labels = scales::dollar_format(suffix = "Euro", prefix = ""),
+    limits = c(0, 280)) +
+  ylim(breaks = c(0, 24)) +
+  annotate(
+    "text",
+    x = 10,
+    y = 15,
+    label = 'atop(bold("Decision2"))',
+    size = 4,
+    parse = TRUE) +
+  theme(
+    axis.title.x = element_text(color = "white"),
+    axis.title.y = element_text(),
+    axis.text.x = element_text(color = "white"),
+    axis.ticks.x = element_line(),
+    legend.title = element_blank(),
+    legend.position = "none",
+    legend.text = element_text(size = 12),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 12, face = "bold"),
+    axis.line = element_line(colour = "black"),
+    panel.background = element_blank()) +
+  xlab("Net benefit") +
+  ylab("Frequency")
+```
+
+Option 3
+
+```{r}
+data_plot_decision3 <-
+  dplyr::select(test.data, starts_with("decision3")) %>%
+  stack(drop = FALSE)
+data_plot_decision3$values <- as.numeric(data_plot_decision3$values)
+
+plot_decision3 <-
+  ggplot(data_plot_decision3, aes(x = values, y = ind, fill = ind)) +
+  geom_density(aes(y = ..count..), alpha = 0.5) +
+  scale_fill_manual(
+    labels = ("Decision3"),
+    values = ("green3") ,
+    guide = "legend") +
+  geom_boxploth(aes(x = values, y = 2.5), width = 5, fill = "green3") +
+  scale_x_continuous(
+    labels = scales::dollar_format(suffix = "Euro", prefix = ""),
+    limits = c(0, 280)) +
+  ylim(breaks = c(0, 24)) +
+  annotate(
+    "text",
+    x = 10,
+    y = 15,
+    label = 'atop(bold("Decision3"))',
+    size = 4,
+    parse = TRUE) +
+  theme(
+    axis.title.x = element_text(color = "white"),
+    axis.title.y = element_text(),
+    axis.text.x = element_text(color = "white"),
+    axis.ticks.x = element_line(),
+    legend.title = element_blank(),
+    legend.position = "none",
+    legend.text = element_text(size = 12),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 12, face = "bold"),
+    axis.line = element_line(colour = "black"),
+    panel.background = element_blank()) +
+  xlab("Net benefit") +
+  ylab("Frequency")
+```
+
+Option 4
+
+```{r}
+
+data_plot_decision4 <-
+  dplyr::select(test.data, starts_with("decision4")) %>%
+  stack(drop = FALSE)
+
+data_plot_decision4$values <- as.numeric(data_plot_decision4$values)
+plot_decision4 <-
+  ggplot(data_plot_decision4, aes(x = values, y = ind, fill = ind)) +
+  geom_density(aes(y = ..count..), alpha = 0.5) +
+  scale_fill_manual(
+    labels = ("Decision4"),
+    values = ("magenta3") ,
+    guide = "legend") +
+  geom_boxploth(aes(x = values, y = 2.5), width = 5, fill = "magenta3") +
+  scale_x_continuous(
+    labels = scales::dollar_format(suffix = "Euro", prefix = ""),
+    limits = c(0, 280)) +
+  ylim(breaks = c(0, 24)) +
+  annotate(
+    "text",
+    x = 10,
+    y = 15,
+    label = 'atop(bold("Decision4"))',
+    size = 4,
+    parse = TRUE) +
+  theme(
+    axis.title.x = element_text(),
+    axis.title.y = element_text(),
+    legend.title = element_blank(),
+    axis.ticks.x = element_line(),
+    legend.position = "none",
+    legend.text = element_text(size = 12),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 12, face = "bold"),
+    axis.line = element_line(colour = "black"),
+    panel.background = element_blank()
+  ) +
+  xlab("Net benefit (Partial Farm Budget)") +
+  ylab("Frequency")
+
+```
+
+Merge data into overlays with box plots.
+
+```{r merged_distribution_boxplots, echo=TRUE, fig.height=10, fig.width=8}
+merged_distribution_boxplots <-
+  ggarrange(
+    plot_decision1,
+    plot_decision2,
+    plot_decision3,
+    plot_decision4,
+    ncol = 1,
+    nrow = 4
+  )
+
+merged_distribution_boxplots
 ```
 
 ## Notes
