@@ -494,7 +494,7 @@ Here we plot partially transparent probability distributions with box plots in t
 test.data <- data.frame("decision1" = rnorm(1000,150,20), "decision2" = rnorm(1000,120,20), "decision3" = rnorm(1000, 80, 20), "decision4" = rnorm(1000, 200, 20))
 ```
 
-Use `dplyr` [@R-dplyr] to select data for the various hypothetical decisions:
+Use `dplyr` [@R-dplyr] to select data for the various hypothetical decisions and the `geom_boxploth` and `geom_density` functions of `ggplot2` to generate plots [@R-ggplot]:
 
 Option 1
 
