@@ -19,6 +19,14 @@ bibliography: packages.bib
 <!-- rmarkdown::render("HighDimensionalData.Rmd", output_format = "pdf_document") -->
 <!-- rmarkdown::render("HighDimensionalData.Rmd", output_format = "word_document") -->
 
+```{r, include=FALSE}
+#devtools::install_github("benmarwick/wordcountaddin")
+library(wordcountaddin)
+
+wordcountaddin::word_count("HighDimensionalData.Rmd")
+```
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 #packages in alphabetic order
