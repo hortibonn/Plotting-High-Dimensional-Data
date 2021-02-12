@@ -1,10 +1,12 @@
 ---
 title: "Visualize high dimensional data"
 author: "Cory Whitney, Eduardo Fernandez, Thi Hoa Do, Marius Ruett"
-output: 
+output:
+  pdf_document:
+    toc: yes
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
 bibliography: packages.bib
 ---
 
@@ -362,7 +364,7 @@ Assume a data set of yield distributions of three different farming practices:
 test<- data.frame("practice 1" = rnorm(1000,8,1.5), "practice 2" = rnorm(1000,7,1), "practice 3" = rnorm(1000, 5, 0.5))
 ```
 
-We can use the function `mcmc_intervals()`or `mcmc_areas()`from `bayesplot` library to plot the data set [@R-bayesplot]
+We can use the function `mcmc_intervals()`or `mcmc_areas()`from `bayesplot` library to plot the data set [@R-bayesplot].
 
 ### with `mcmc_intervals()`
 
