@@ -10,8 +10,7 @@ dimensionality.
 
 <!-- Links: start -->
 
-| Quick Links                                                                                                                                                             |
-| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |                                                                 |
+| Quick Links                                                                                                                                                             |                                                              |
 | [**Visualizing High Dimensional Data**](http://htmlpreview.github.io/?https://github.com/hortibonn/Plotting-High-Dimensional-Data/blob/master/HighDimensionalData.html) |
 | [**High Dimensional Data Wiki**](https://github.com/hortibonn/High%20Dimensional%20Data/wiki)                                                                           |
 
