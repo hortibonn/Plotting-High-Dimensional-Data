@@ -8,13 +8,7 @@ interactions. This repository hosts a small collection of solutions to
 generate plots of high
 dimensionality.
 
-<!-- Links: start -->
-
-| Quick Links                                                                                                                                                             |                                                              |
-| [**Visualizing High Dimensional Data**](http://htmlpreview.github.io/?https://github.com/hortibonn/Plotting-High-Dimensional-Data/blob/master/HighDimensionalData.html) |
-| [**High Dimensional Data Wiki**](https://github.com/hortibonn/High%20Dimensional%20Data/wiki)                                                                           |
-
-<!-- Links: end -->
+[**Visualizing High Dimensional Data**](http://htmlpreview.github.io/?https://github.com/hortibonn/Plotting-High-Dimensional-Data/blob/master/HighDimensionalData.html) 
 
 See the folder `Radial` for R script examples of how to plot some
 interesting things (these are mostly covered in the vignette).
